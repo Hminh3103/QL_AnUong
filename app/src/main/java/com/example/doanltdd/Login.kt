@@ -54,13 +54,13 @@ class Login : AppCompatActivity() {
 //        var dsUser = mutableListOf<User>()
 //        dsUser.add(u)
         btnDangKy.setOnClickListener {
-            //val intent = Intent(this, register::class.java)
-            setContentView(R.layout.activity_register)
+            val intent= Intent(this, register::class.java)
+            startActivity(intent)
 
         }
         btnQuenMatKhau.setOnClickListener {
-            //val intent = Intent(this, register::class.java)
-            setContentView(R.layout.activity_forgotpass)
+            val intent= Intent(this, forgotpass::class.java)
+            startActivity(intent)
 
         }
         btnDangNhap.setOnClickListener {
@@ -79,7 +79,8 @@ class Login : AppCompatActivity() {
 
         }
         btnTroLai.setOnClickListener {
-            setContentView(R.layout.activity_main)
+            val intent= Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
 
     }

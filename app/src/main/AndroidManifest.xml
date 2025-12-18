@@ -12,6 +12,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoAnLTDD">
         <activity
+            android:name=".TheoDoiCalo"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- <activity -->
+        <!-- android:name=".TheoDoiCalo" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".forgotpass"
             android:exported="true">
             <intent-filter>
@@ -39,7 +65,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".MainDoAn"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +74,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainDoAn"
+            android:name=".Main_GiuaKy"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

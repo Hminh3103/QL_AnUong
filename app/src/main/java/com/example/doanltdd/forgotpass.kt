@@ -1,5 +1,6 @@
 package com.example.doanltdd
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -64,6 +65,10 @@ class forgotpass : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show()
             }
+        }
+        btnTroLai.setOnClickListener {
+            val intent= Intent(this, Login::class.java)
+            startActivity(intent)
         }
 
     }

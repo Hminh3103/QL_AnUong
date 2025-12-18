@@ -1,6 +1,7 @@
 package com.example.doanltdd
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ class MainDoAn : AppCompatActivity() {
     private lateinit var spBuaAn: Spinner
     private lateinit var edtCalo: EditText
     private lateinit var btnThem: Button
+    private lateinit var btnThoat: Button
     private lateinit var lvDanhSach: ListView
 
     private lateinit var adapterList: ArrayAdapter<String>
@@ -32,6 +34,7 @@ class MainDoAn : AppCompatActivity() {
         spBuaAn = findViewById(R.id.spBuaAn)
         edtCalo = findViewById(R.id.edtCalo)
         btnThem = findViewById(R.id.btnThem)
+        btnThoat = findViewById(R.id.btnThoat)
         lvDanhSach = findViewById(R.id.lvDanhSach)
     }
 
@@ -60,6 +63,10 @@ class MainDoAn : AppCompatActivity() {
         lvDanhSach.setOnItemLongClickListener { _, _, position, _ ->
             xoaMonAn(position)
             true
+        }
+        btnThoat.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 

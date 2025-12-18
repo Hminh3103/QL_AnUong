@@ -2,8 +2,9 @@ package com.example.doanltdd
 
 import android.content.Context
 import android.widget.Toast
+import androidx.lifecycle.ViewModel
 
-class User() {
+class User(): ViewModel() {
     private lateinit var taiKhoan: String
     private lateinit var matKhau: String
     private lateinit var email: String
