@@ -1,24 +1,28 @@
-package com.example.doanltdd
+package com.example.doanltdd.Login
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import android.content.Context
-import android.content.Intent
-import android.widget.Toast
+import com.example.doanltdd.MainActivity
+import com.example.doanltdd.R
+import com.example.doanltdd.User
+import com.example.doanltdd.Login.register
 
 class Login : AppCompatActivity() {
     private lateinit var edtTaiKhoan: EditText
     private lateinit var edtMatKhau: EditText
     private lateinit var btnDangNhap: Button
-    private lateinit var btnDangKy: Button
-    private lateinit var btnQuenMatKhau: Button
+    private lateinit var tvDangKy: TextView
     private lateinit var btnTroLai: Button
+    private lateinit var tvQuenMatKhau: TextView
 
     //    lateinit var dsUser: MutableList<User>
     private lateinit var builder: AlertDialog.Builder
@@ -43,22 +47,22 @@ class Login : AppCompatActivity() {
         edtTaiKhoan = findViewById(R.id.edtTaiKhoan)
         edtMatKhau = findViewById(R.id.edtMatKhau)
         btnDangNhap = findViewById(R.id.btnDangNhap)
-        btnDangKy = findViewById(R.id.btnDangky)
-        btnQuenMatKhau = findViewById(R.id.btnQuenMatKhau)
+        tvDangKy = findViewById(R.id.tvDangKy)
         btnTroLai = findViewById(R.id.btnTroLai)
         builder = AlertDialog.Builder(this)
+        tvQuenMatKhau=findViewById(R.id.tvQuenMatKhau)
     }
 
     fun setEvent() {
         val u = User("1nhm00", "12345678")
 //        var dsUser = mutableListOf<User>()
 //        dsUser.add(u)
-        btnDangKy.setOnClickListener {
+        tvDangKy.setOnClickListener {
             val intent= Intent(this, register::class.java)
             startActivity(intent)
 
         }
-        btnQuenMatKhau.setOnClickListener {
+        tvQuenMatKhau.setOnClickListener {
             val intent= Intent(this, forgotpass::class.java)
             startActivity(intent)
 

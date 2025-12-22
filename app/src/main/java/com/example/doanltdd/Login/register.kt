@@ -1,4 +1,4 @@
-package com.example.doanltdd
+package com.example.doanltdd.Login
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
-
+import com.example.doanltdd.R
 
 class register : AppCompatActivity() {
     private lateinit var edtTaiKhoan: EditText
