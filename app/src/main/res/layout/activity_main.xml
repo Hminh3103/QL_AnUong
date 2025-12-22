@@ -2,39 +2,41 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnListBuaAn"
         android:layout_width="250dp"
         android:layout_height="55dp"
         android:layout_marginTop="144dp"
-        android:text="Button"
+        android:text="Ghi lại bữa ăn, theo dõi lượng calo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnQuanLiThoiQuen"
         android:layout_width="250dp"
         android:layout_height="55dp"
         android:layout_marginTop="20dp"
-        android:text="Button"
+        android:text="Quản lí thói quen ăn uống, mục tiêu cá nhân"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/btnListBuaAn" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnCalo"
         android:layout_width="250dp"
         android:layout_height="55dp"
         android:layout_marginTop="20dp"
-        android:text="Button"
+        android:text="Theo dõi lượng calo và dinh dưỡng nạp vào cơ thể"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/btnQuanLiThoiQuen" />
 
     <TextView
         android:id="@+id/textView2"
