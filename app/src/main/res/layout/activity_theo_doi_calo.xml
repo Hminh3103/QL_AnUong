@@ -6,124 +6,146 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TheoDoiCalo">
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="Theo dõi lượng calo và dinh dưỡng nạp vào cơ thể"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <TextView
-        android:id="@+id/subtitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Ghi lại bữa ăn trong ngày"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <EditText
-        android:id="@+id/calorieEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/edit_text_border"
-        android:hint="Số lượng calo: "
-        android:inputType="number"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subtitleTextView" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="#388E8E"
+                app:title="THEO DÕI CALO"
+                app:titleTextColor="#FFFFFF" />
 
-    <Spinner
-        android:id="@+id/mealNameSpinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/edit_text_border"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calorieEditText" />
+            <EditText
+                android:id="@+id/dishNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:drawable/edit_text"
+                android:hint="Tên món ăn"
+                android:padding="12dp"
+                android:inputType="text" />
 
-    <Button
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Thêm"
-        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mealNameSpinner" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:weightSum="3">
 
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Sửa"
-        app:layout_constraintEnd_toStartOf="@+id/editButton"
-        app:layout_constraintStart_toEndOf="@+id/addButton"
-        app:layout_constraintTop_toTopOf="@+id/addButton" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Loại bữa"
+                    android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Xóa"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/deleteButton"
-        app:layout_constraintTop_toTopOf="@+id/addButton" />
+                <Spinner
+                    android:id="@+id/mealNameSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="2"
+                    android:background="@android:drawable/edit_text"
+                    android:padding="12dp" />
+            </LinearLayout>
 
-    <ListView
-        android:id="@+id/mealsListView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/edit_text_border"
-        app:layout_constraintBottom_toTopOf="@+id/totalCaloriesButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addButton" />
+            <EditText
+                android:id="@+id/calorieEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:drawable/edit_text"
+                android:hint="Calories"
+                android:inputType="number"
+                android:padding="12dp" />
 
-    <Button
-        android:id="@+id/totalCaloriesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="Tổng lượng calo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:weightSum="4">
 
-    <TextView
-        android:id="@+id/totalCaloriesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="0"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/totalCaloriesButton"
-        app:layout_constraintStart_toEndOf="@+id/totalCaloriesButton"
-        app:layout_constraintTop_toTopOf="@+id/totalCaloriesButton" />
+                <Button
+                    android:id="@+id/addButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:backgroundTint="#388E8E"
+                    android:text="THÊM"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/xoaButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="#D9534F"
+                    android:text="XÓA"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/suaButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="#337AB7"
+                    android:text="SỬA"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/thoatButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="#6C757D"
+                    android:text="THOÁT"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="#CCCCCC" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Danh sách món ăn"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/mealsListView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="8dp"
+                android:divider="#CCCCCC"
+                android:dividerHeight="1dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

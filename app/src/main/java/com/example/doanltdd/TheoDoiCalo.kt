@@ -1,167 +1,151 @@
 package com.example.doanltdd
 
 import android.os.Bundle
-import android.view.View
-import android.widget.*
-
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ListView
+import android.widget.Spinner
+import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class TheoDoiCalo : AppCompatActivity() {
-    lateinit var calorieEditText: EditText
-    lateinit var mealNameSpinner: Spinner
-    lateinit var addButton: Button
-    lateinit var suaButton: Button
-    lateinit var xoaButton: Button
-    lateinit var totalCaloriesButton: Button
-    lateinit var mealsListView: ListView
-    lateinit var totalCaloriesTextView: TextView
+    private lateinit var dishNameEditText: EditText
+    private lateinit var mealNameSpinner: Spinner
+    private lateinit var calorieEditText: EditText
+    private lateinit var addButton: Button
+    private lateinit var suaButton: Button
+    private lateinit var xoaButton: Button
+    private lateinit var thoatButton: Button
+    private lateinit var mealsListView: ListView
 
-    lateinit var meals: ArrayList<String>
-    lateinit var mealsAdapter: ArrayAdapter<String>
+    private val meals = ArrayList<String>()
+    private lateinit var mealsAdapter: ArrayAdapter<String>
+    private val mealOptions = arrayListOf("Bữa sáng", "Bữa trưa", "Bữa chiều", "Bữa tối")
 
-    var selectedPosition = -1
+    private var selectedPosition: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         setContentView(R.layout.activity_theo_doi_calo)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+
+        val mainView = findViewById<android.view.View>(R.id.main)
+        ViewCompat.setOnApplyWindowInsetsListener(mainView) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         setControl()
         setEvent()
     }
 
+    private fun setControl() {
+        dishNameEditText = findViewById(R.id.dishNameEditText)
+        mealNameSpinner = findViewById(R.id.mealNameSpinner)
+        calorieEditText = findViewById(R.id.calorieEditText)
+        addButton = findViewById(R.id.addButton)
+        suaButton = findViewById(R.id.suaButton)
+        xoaButton = findViewById(R.id.xoaButton)
+        thoatButton = findViewById(R.id.thoatButton)
+        mealsListView = findViewById(R.id.mealsListView)
 
+        // Setup Spinner
+        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mealOptions)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        mealNameSpinner.adapter = spinnerAdapter
 
+        // Setup ListView
+        mealsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, meals)
+        mealsListView.adapter = mealsAdapter
+    }
 
+    private fun setEvent() {
+        addButton.setOnClickListener {
+            val dishName = dishNameEditText.text.toString().trim()
+            val calories = calorieEditText.text.toString().trim()
+            val mealType = mealNameSpinner.selectedItem.toString()
 
-
-        private fun setControl() {
-            title = "Theo dõi lượng calo và dinh dưỡng nạp vào cơ thể"
-
-            calorieEditText = findViewById(R.id.calorieEditText)
-            mealNameSpinner = findViewById(R.id.mealNameSpinner)
-            addButton = findViewById(R.id.addButton)
-            suaButton = findViewById(R.id.deleteButton) // Sửa
-            xoaButton = findViewById(R.id.editButton)   // Xóa
-            totalCaloriesButton = findViewById(R.id.totalCaloriesButton)
-            mealsListView = findViewById(R.id.mealsListView)
-            totalCaloriesTextView = findViewById(R.id.totalCaloriesTextView)
-
-            // Spinner
-            val mealOptions = arrayListOf(
-                "Bữa sáng",
-                "Bữa trưa",
-                "Bữa chiều",
-                "Bữa tối"
-            )
-
-            val spinnerAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_item,
-                mealOptions
-            )
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            mealNameSpinner.adapter = spinnerAdapter
-
-            // ListView
-            meals = ArrayList()
-            mealsAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                meals
-            )
-            mealsListView.adapter = mealsAdapter
+            if (dishName.isNotEmpty() && calories.isNotEmpty()) {
+                val mealInfo = "[$mealType] $dishName: $calories calo"
+                meals.add(mealInfo)
+                mealsAdapter.notifyDataSetChanged()
+                clearInputs()
+                Toast.makeText(this, "Đã thêm món ăn", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        private fun setEvent() {
+        mealsListView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            selectedPosition = position
+            val selectedMeal = meals[position]
+            try {
+                // Ví dụ chuỗi: "[Bữa sáng] Phở: 500 calo"
+                val regex = Regex("\\[(.*?)\\] (.*?): (.*?) calo")
+                val matchResult = regex.find(selectedMeal)
 
-            // Add
-            addButton.setOnClickListener {
-                val calories = calorieEditText.text.toString()
-                val mealType = mealNameSpinner.selectedItem.toString()
+                if (matchResult != null) {
+                    val (mealType, dishName, calories) = matchResult.destructured
 
-                if (calories.isNotEmpty()) {
-                    val mealInfo = "$mealType: $calories calo"
-                    meals.add(mealInfo)
-                    mealsAdapter.notifyDataSetChanged()
-                    calorieEditText.setText("")
-                } else {
-                    Toast.makeText(this, "Vui lòng nhập số calo", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            // Click item ListView
-            mealsListView.setOnItemClickListener { _, _, position, _ ->
-                selectedPosition = position
-                val selectedMeal = meals[position]
-
-                try {
-                    val parts = selectedMeal.split(": ")
-                    val mealType = parts[0]
-                    val calories = parts[1].split(" ")[0]
-
+                    dishNameEditText.setText(dishName)
                     calorieEditText.setText(calories)
 
-                    val adapter = mealNameSpinner.adapter as ArrayAdapter<String>
-                    val spinnerPosition = adapter.getPosition(mealType)
-                    mealNameSpinner.setSelection(spinnerPosition)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Lỗi khi chọn bữa ăn", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            // Sửa
-            suaButton.setOnClickListener {
-                if (selectedPosition != -1) {
-                    val calories = calorieEditText.text.toString()
-                    val mealType = mealNameSpinner.selectedItem.toString()
-
-                    if (calories.isNotEmpty()) {
-                        val mealInfo = "$mealType: $calories calo"
-                        meals[selectedPosition] = mealInfo
-                        mealsAdapter.notifyDataSetChanged()
-                        calorieEditText.setText("")
-                        selectedPosition = -1
-                    } else {
-                        Toast.makeText(this, "Vui lòng nhập số calo", Toast.LENGTH_SHORT).show()
+                    val spinnerPosition = mealOptions.indexOf(mealType)
+                    if (spinnerPosition != -1) {
+                        mealNameSpinner.setSelection(spinnerPosition)
                     }
-                } else {
-                    Toast.makeText(this, "Vui lòng chọn một bữa ăn để sửa", Toast.LENGTH_SHORT).show()
                 }
+            } catch (e: Exception) {
+                Toast.makeText(this, "Lỗi khi lấy dữ liệu món ăn", Toast.LENGTH_SHORT).show()
             }
+        }
 
-            // Xóa
-            xoaButton.setOnClickListener {
-                if (selectedPosition != -1) {
-                    meals.removeAt(selectedPosition)
+        suaButton.setOnClickListener {
+            if (selectedPosition != -1) {
+                val dishName = dishNameEditText.text.toString().trim()
+                val calories = calorieEditText.text.toString().trim()
+                val mealType = mealNameSpinner.selectedItem.toString()
+
+                if (dishName.isNotEmpty() && calories.isNotEmpty()) {
+                    val mealInfo = "[$mealType] $dishName: $calories calo"
+                    meals[selectedPosition] = mealInfo
                     mealsAdapter.notifyDataSetChanged()
-                    calorieEditText.setText("")
-                    selectedPosition = -1
+                    clearInputs()
+                    Toast.makeText(this, "Đã cập nhật", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Vui lòng chọn một bữa ăn để xóa", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                 }
+            } else {
+                Toast.makeText(this, "Vui lòng chọn món cần sửa từ danh sách", Toast.LENGTH_SHORT).show()
             }
+        }
 
-            // Tổng calo
-            totalCaloriesButton.setOnClickListener {
-                var totalCalories = 0
-
-                for (meal in meals) {
-                    try {
-                        val caloriesStr = meal.split(": ")[1].split(" ")[0]
-                        totalCalories += caloriesStr.toInt()
-                    } catch (_: Exception) {
-                    }
-                }
-
-                totalCaloriesTextView.text = "$totalCalories calo"
+        xoaButton.setOnClickListener {
+            if (selectedPosition != -1) {
+                meals.removeAt(selectedPosition)
+                mealsAdapter.notifyDataSetChanged()
+                clearInputs()
+                Toast.makeText(this, " Đã xóa món ăn", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Vui lòng chọn món cần xóa", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        thoatButton.setOnClickListener {
+            finish()
         }
     }
 
+    private fun clearInputs() {
+        dishNameEditText.setText("")
+        calorieEditText.setText("")
+        mealNameSpinner.setSelection(0)
+        selectedPosition = -1
+    }
+}
