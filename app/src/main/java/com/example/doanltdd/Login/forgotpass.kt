@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.paging.DEBUG
-import com.example.doanltdd.Data.Database.AppDatabase
 import com.example.doanltdd.Data.Entity.User
 import com.example.doanltdd.MainActivity
 import com.example.doanltdd.R

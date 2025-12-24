@@ -1,9 +1,11 @@
 package com.example.doanltdd
 
+import com.example.doanltdd.Data.Database.db_MonAn
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.doanltdd.Data.Dao.MonAnDao
 
 class MainDoAn : AppCompatActivity() {
 
@@ -15,6 +17,10 @@ class MainDoAn : AppCompatActivity() {
     private lateinit var btnEdit: Button
     private lateinit var btnExit: Button
     private lateinit var listViewMeals: ListView
+    private lateinit var databaseMonAn: db_MonAn
+    private lateinit var monAnDao: MonAnDao
+
+
 
     private val mealList = mutableListOf<Meal>()
     private lateinit var adapter: ArrayAdapter<String>
@@ -24,10 +30,13 @@ class MainDoAn : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_do_an)
 
+        databaseMonAn = db_MonAn.getDatabase(this)
+        monAnDao = databaseMonAn.monAnDao()
+
         initViews()
         setupSpinner()
         setupListView()
-        setupButtons()
+        setEvent()
         //loadSampleData()
     }
 
@@ -76,7 +85,9 @@ class MainDoAn : AppCompatActivity() {
         }
     }
 
-    private fun setupButtons() {
+    private fun setEvent() {
+        val data = User_SharedPreferences(this@MainDoAn)
+        val id = data.getUserId()
         btnAdd.setOnClickListener { addMeal() }
         btnDelete.setOnClickListener { deleteMeal() }
         btnEdit.setOnClickListener { editMeal() }
