@@ -16,7 +16,6 @@ import com.example.doanltdd.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.example.doanltdd.Data.Dao.UserDao
-import com.example.doanltdd.Data.Database.AppDatabase
 import com.example.doanltdd.Data.Entity.User
 import com.example.doanltdd.MainDoAn
 import com.example.doanltdd.User_SharedPreferences
