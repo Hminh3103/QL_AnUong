@@ -13,8 +13,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.doanltdd.MainActivity
 import com.example.doanltdd.R
-import com.example.doanltdd.User
-import com.example.doanltdd.Login.register
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import com.example.doanltdd.Data.Dao.UserDao
+import com.example.doanltdd.Data.Database.AppDatabase
+import com.example.doanltdd.MainDoAn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class Login : AppCompatActivity() {
     private lateinit var edtTaiKhoan: EditText
@@ -50,40 +56,49 @@ class Login : AppCompatActivity() {
         tvDangKy = findViewById(R.id.tvDangKy)
         btnTroLai = findViewById(R.id.btnTroLai)
         builder = AlertDialog.Builder(this)
-        tvQuenMatKhau=findViewById(R.id.tvQuenMatKhau)
+        tvQuenMatKhau = findViewById(R.id.tvQuenMatKhau)
     }
 
     fun setEvent() {
-        val u = User("1nhm00", "12345678")
-//        var dsUser = mutableListOf<User>()
-//        dsUser.add(u)
+        val db = AppDatabase.getDatabase(this)
+        val userDao = db.userDao()
+
         tvDangKy.setOnClickListener {
-            val intent= Intent(this, register::class.java)
+            val intent = Intent(this, register::class.java)
             startActivity(intent)
 
         }
         tvQuenMatKhau.setOnClickListener {
-            val intent= Intent(this, forgotpass::class.java)
+            val intent = Intent(this, forgotpass::class.java)
             startActivity(intent)
 
         }
         btnDangNhap.setOnClickListener {
-
-            if (u.getTK() == edtTaiKhoan.text.toString().trim()) {
-                if (u.getMK() == edtMatKhau.text.toString().trim()) {
-                    Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show()
-                    setContentView(R.layout.activity_main)
-                } else {
-                    Toast.makeText(this, "Mật khẩu không chính xác", Toast.LENGTH_SHORT).show()
+            val taiKhoan = edtTaiKhoan.text.toString().trim()
+            val matKhau = edtMatKhau.text.toString().trim()
+            if (taiKhoan.isNotBlank() && matKhau.isNotBlank()) {
+                GlobalScope.launch {
+                    val checkLogin = userDao.isLoginValid(taiKhoan, matKhau)
+                    if (checkLogin == true) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@Login, "Đăng nhập thành công", Toast.LENGTH_SHORT)
+                                .show()
+                            val intent = Intent(this@Login, MainActivity::class.java)
+                            startActivity(intent)
+                        }
+                    } else {
+                        withContext(Dispatchers.Main){
+                            Toast.makeText(this@Login, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
                 }
             } else {
-
-                Toast.makeText(this, "Tài khoản không tồn tại ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Hãy nhập tài khoản và mật khẩu", Toast.LENGTH_SHORT).show()
             }
-
         }
         btnTroLai.setOnClickListener {
-            val intent= Intent(this, MainActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
