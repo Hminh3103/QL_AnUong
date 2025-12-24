@@ -8,7 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
+import com.example.doanltdd.Data.Database.db_MonAnGoiY
+import com.example.doanltdd.Data.Dao.dao_MonAnGoiY
 class mon_an_goi_y : AppCompatActivity() {
     private lateinit var edtTen: EditText
     private lateinit var edtCalo: EditText
@@ -17,6 +18,9 @@ class mon_an_goi_y : AppCompatActivity() {
     private lateinit var btnThem: Button
     private lateinit var btnXoa: Button
     private lateinit var btnSua: Button
+
+    private lateinit var db:db_MonAnGoiY
+    private lateinit var dao_MonAnGoiY:dao_MonAnGoiY
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

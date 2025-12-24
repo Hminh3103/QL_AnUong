@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.doanltdd.Data.Database.AppDatabase
 import com.example.doanltdd.Data.Entity.User
 import com.example.doanltdd.R
 import kotlinx.coroutines.Dispatchers
