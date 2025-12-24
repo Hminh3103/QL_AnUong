@@ -6,14 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/nav_Menu"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/top_background1" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_Menu"
@@ -28,11 +32,11 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/btnDangNhap"
+        android:id="@+id/btnDangXuat"
         android:layout_width="257dp"
         android:layout_height="57dp"
         android:layout_marginTop="4dp"
-        android:text="Đăng nhập"
+        android:text="Đăng xuất"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCalo" />
@@ -70,17 +74,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnQuanLiThoiQuen" />
 
-    <ImageView
-        android:id="@+id/imageView3"
+
+
+    <TextView
+        android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/nav_Menu"
+        android:layout_marginTop="10dp"
+        android:text="Xin chào, "
+        android:textColor="#000"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+    <TextView
+        android:id="@+id/tvRole"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="admin"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/top_background1" />
+        app:layout_constraintStart_toEndOf="@+id/textView16"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
