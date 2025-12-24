@@ -11,8 +11,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.paging.DEBUG
+import com.example.doanltdd.Data.Database.AppDatabase
+import com.example.doanltdd.Data.Entity.User
+import com.example.doanltdd.MainActivity
 import com.example.doanltdd.R
-import com.example.doanltdd.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class forgotpass : AppCompatActivity() {
     private lateinit var edtTaiKhoan: EditText
@@ -48,37 +55,59 @@ class forgotpass : AppCompatActivity() {
     }
 
     fun setEvent() {
+        val db = AppDatabase.getDatabase(this)
+        val userDao = db.userDao()
         btnDoiMatKhau.setOnClickListener {
-            val u = User("1nhm00", "12345678", "1nhm00@gmail.com")
-//            var dsUser = mutableListOf<User>()
-//            dsUser.add(u)
+            val txtTaiKhoan = edtTaiKhoan.text.toString().trim()
+            val txtEmail = edtEmail.text.toString().trim()
+            val txtMatKhau = edtMatKhauMoi.text.toString().trim()
+            val txtOTP = edtOTP.text.toString().trim()
 
-            if (u.getTK() == edtTaiKhoan.text.toString().trim()) {
-                if (u.getEmail() == edtEmail.text.toString().trim()) {
-                    if (edtMatKhauMoi.text.length >= 8 && edtMatKhauMoi.text.length <= 12) {
-                        if (edtOTP.text.toString().trim() == "123") {
-                            u.setMK(edtMatKhauMoi.text.toString().trim())
-                            Toast.makeText(this, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            Toast.makeText(this, "Mã OTP không chính xác", Toast.LENGTH_SHORT)
-                                .show()
+
+
+            if (txtTaiKhoan.isNotBlank() && txtEmail.isNotBlank()) {
+                if (edtMatKhauMoi.text.length >= 8 && edtMatKhauMoi.text.length <= 12) {
+                    if (edtOTP.text.toString().trim() == "123") {
+                        GlobalScope.launch(Dispatchers.IO) {
+                            val checkInfor = userDao.isForgotPassValid(txtTaiKhoan, txtEmail)
+                            if (checkInfor == true) {
+                                userDao.update(txtTaiKhoan, txtMatKhau)
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@forgotpass,
+                                        "Đỗi mật khẩu thành công",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@forgotpass,
+                                        "Đỗi mật khẩu không thành công",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
                         }
                     } else {
-                        Toast.makeText(this, "Mật khẩu từ 8 đến 12 kí tự", Toast.LENGTH_LONG).show()
+
+                        Toast.makeText(this, "Mã OTP không chính xác", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this, "Email không chính xác", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Mật khẩu từ 8 đến 12 kí tự", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Hãy nhập đủ thông tin", Toast.LENGTH_LONG).show()
             }
         }
-        btnTroLai.setOnClickListener {
+
+        btnTroLai.setOnClickListener()
+        {
             val intent = Intent(this, com.example.doanltdd.Login.Login::class.java)
             startActivity(intent)
         }
-        tvDangNhap . setOnClickListener {
+        tvDangNhap.setOnClickListener()
+        {
             val intent = Intent(this, com.example.doanltdd.Login.Login::class.java)
             startActivity(intent)
         }
