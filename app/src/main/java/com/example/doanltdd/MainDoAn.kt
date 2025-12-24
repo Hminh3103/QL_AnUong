@@ -1,11 +1,16 @@
 package com.example.doanltdd
 
-import com.example.doanltdd.Data.Database.db_MonAn
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.doanltdd.Data.Dao.MonAnDao
+import com.example.doanltdd.Data.Database.db_MonAn
+import com.example.doanltdd.Data.Entity.Monan
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainDoAn : AppCompatActivity() {
 
@@ -17,12 +22,13 @@ class MainDoAn : AppCompatActivity() {
     private lateinit var btnEdit: Button
     private lateinit var btnExit: Button
     private lateinit var listViewMeals: ListView
+
+    // Database & Dao
     private lateinit var databaseMonAn: db_MonAn
     private lateinit var monAnDao: MonAnDao
 
-
-
-    private val mealList = mutableListOf<Meal>()
+    // Danh sách để hiển thị lên giao diện
+    private val mealList = mutableListOf<Monan>()
     private lateinit var adapter: ArrayAdapter<String>
     private var selectedPosition = -1
 
@@ -30,6 +36,7 @@ class MainDoAn : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_do_an)
 
+        // Khởi tạo Database
         databaseMonAn = db_MonAn.getDatabase(this)
         monAnDao = databaseMonAn.monAnDao()
 
@@ -37,7 +44,9 @@ class MainDoAn : AppCompatActivity() {
         setupSpinner()
         setupListView()
         setEvent()
-        //loadSampleData()
+
+        // Tải dữ liệu từ database ngay khi mở app
+        loadDataFromDatabase()
     }
 
     private fun initViews() {
@@ -59,11 +68,7 @@ class MainDoAn : AppCompatActivity() {
     }
 
     private fun setupListView() {
-        adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_activated_1,
-            mutableListOf()
-        )
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_activated_1, mutableListOf())
         listViewMeals.adapter = adapter
         listViewMeals.choiceMode = ListView.CHOICE_MODE_SINGLE
 
@@ -71,13 +76,12 @@ class MainDoAn : AppCompatActivity() {
             selectedPosition = position
             val meal = mealList[position]
 
-            etMealName.setText(meal.name)
-            etCalories.setText(meal.calories.toString())
+            etMealName.setText(meal.tenmonan)
+            etCalories.setText(meal.socalo.toString())
 
-            // Set spinner selection
             val spinnerAdapter = spinnerMealType.adapter
             for (i in 0 until spinnerAdapter.count) {
-                if (spinnerAdapter.getItem(i).toString() == meal.type) {
+                if (spinnerAdapter.getItem(i).toString() == meal.buaan) {
                     spinnerMealType.setSelection(i)
                     break
                 }
@@ -86,18 +90,23 @@ class MainDoAn : AppCompatActivity() {
     }
 
     private fun setEvent() {
-        val data = User_SharedPreferences(this@MainDoAn)
-        val id = data.getUserId()
         btnAdd.setOnClickListener { addMeal() }
         btnDelete.setOnClickListener { deleteMeal() }
         btnEdit.setOnClickListener { editMeal() }
         btnExit.setOnClickListener { finish() }
     }
 
-    private fun loadSampleData() {
-        mealList.add(Meal("Oatmeal", "Bữa sáng", 200))
-        mealList.add(Meal("Lentil Soup", "Bữa trưa", 500))
-        refreshListView()
+    // --- CÁC HÀM XỬ LÝ DATABASE ---
+
+    private fun loadDataFromDatabase() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val list = monAnDao.getAllMonAn()
+            withContext(Dispatchers.Main) {
+                mealList.clear()
+                mealList.addAll(list)
+                refreshListView()
+            }
+        }
     }
 
     private fun addMeal() {
@@ -105,48 +114,42 @@ class MainDoAn : AppCompatActivity() {
         val type = spinnerMealType.selectedItem.toString()
         val caloriesStr = etCalories.text.toString().trim()
 
-        if (name.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập tên món ăn", Toast.LENGTH_SHORT).show()
+        if (name.isEmpty() || caloriesStr.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (caloriesStr.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập calories", Toast.LENGTH_SHORT).show()
-            return
+        val calories = caloriesStr.toIntOrNull() ?: 0
+        val newMonAn = Monan(tenmonan = name, buaan = type, socalo = calories)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            monAnDao.insertMonAn(newMonAn)
+            withContext(Dispatchers.Main) {
+                loadDataFromDatabase()
+                clearInputs()
+                Toast.makeText(this@MainDoAn, "Đã thêm vào database", Toast.LENGTH_SHORT).show()
+            }
         }
-
-        val calories = caloriesStr.toIntOrNull()
-        if (calories == null || calories <= 0) {
-            Toast.makeText(this, "Calories phải là số dương", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val meal = Meal(name, type, calories)
-        mealList.add(meal)
-        refreshListView()
-
-        // Tự động chọn món vừa thêm
-        selectedPosition = mealList.size - 1
-        listViewMeals.setItemChecked(selectedPosition, true)
-
-        Toast.makeText(this, "Đã thêm món ăn", Toast.LENGTH_SHORT).show()
     }
 
     private fun deleteMeal() {
         if (selectedPosition == -1) {
-            Toast.makeText(this, "Vui lòng chọn món ăn để xóa", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Vui lòng chọn món để xóa", Toast.LENGTH_SHORT).show()
             return
         }
 
         AlertDialog.Builder(this)
             .setTitle("Xác nhận xóa")
-            .setMessage("Bạn có chắc muốn xóa món ăn này?")
+            .setMessage("Bạn có chắc muốn xóa món này?")
             .setPositiveButton("Xóa") { _, _ ->
-                mealList.removeAt(selectedPosition)
-                selectedPosition = -1
-                refreshListView()
-                clearInputs()
-                Toast.makeText(this, "Đã xóa món ăn", Toast.LENGTH_SHORT).show()
+                val mealToDelete = mealList[selectedPosition]
+                lifecycleScope.launch(Dispatchers.IO) {
+                    monAnDao.deleteMonAn(mealToDelete)
+                    withContext(Dispatchers.Main) {
+                        loadDataFromDatabase()
+                        clearInputs()
+                    }
+                }
             }
             .setNegativeButton("Hủy", null)
             .show()
@@ -154,57 +157,40 @@ class MainDoAn : AppCompatActivity() {
 
     private fun editMeal() {
         if (selectedPosition == -1) {
-            Toast.makeText(this, "Vui lòng chọn món ăn để sửa", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Vui lòng chọn món để sửa", Toast.LENGTH_SHORT).show()
             return
         }
 
         val name = etMealName.text.toString().trim()
         val type = spinnerMealType.selectedItem.toString()
-        val caloriesStr = etCalories.text.toString().trim()
+        val calories = etCalories.text.toString().toIntOrNull() ?: 0
 
-        if (name.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập tên món ăn", Toast.LENGTH_SHORT).show()
-            return
+        // Lấy ID của món cũ để cập nhật đúng dòng đó
+        val oldMeal = mealList[selectedPosition]
+        val updatedMeal = Monan(id = oldMeal.id, tenmonan = name, buaan = type, socalo = calories)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            monAnDao.updateMonAn(updatedMeal)
+            withContext(Dispatchers.Main) {
+                loadDataFromDatabase()
+                Toast.makeText(this@MainDoAn, "Đã cập nhật", Toast.LENGTH_SHORT).show()
+            }
         }
-
-        if (caloriesStr.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập calories", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val calories = caloriesStr.toIntOrNull()
-        if (calories == null || calories <= 0) {
-            Toast.makeText(this, "Calories phải là số dương", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        mealList[selectedPosition] = Meal(name, type, calories)
-        refreshListView()
-        listViewMeals.setItemChecked(selectedPosition, true)
-
-        Toast.makeText(this, "Đã cập nhật món ăn", Toast.LENGTH_SHORT).show()
     }
 
     private fun refreshListView() {
         adapter.clear()
         mealList.forEach { meal ->
-            adapter.add("${meal.name} (${meal.type}) - ${meal.calories} kcal")
+            adapter.add("${meal.tenmonan} (${meal.buaan}) - ${meal.socalo} kcal")
         }
         adapter.notifyDataSetChanged()
     }
 
     private fun clearInputs() {
         etMealName.text.clear()
-        spinnerMealType.setSelection(0)
         etCalories.text.clear()
+        spinnerMealType.setSelection(0)
         selectedPosition = -1
         listViewMeals.clearChoices()
-        adapter.notifyDataSetChanged()
     }
-
-    data class Meal(
-        val name: String,
-        val type: String,
-        val calories: Int
-    )
 }
