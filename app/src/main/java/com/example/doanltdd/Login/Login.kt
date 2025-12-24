@@ -17,7 +17,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.example.doanltdd.Data.Dao.UserDao
 import com.example.doanltdd.Data.Database.AppDatabase
+import com.example.doanltdd.Data.Entity.User
 import com.example.doanltdd.MainDoAn
+import com.example.doanltdd.User_SharedPreferences
+import com.example.doanltdd.main_user
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -30,7 +33,6 @@ class Login : AppCompatActivity() {
     private lateinit var btnTroLai: Button
     private lateinit var tvQuenMatKhau: TextView
 
-    //    lateinit var dsUser: MutableList<User>
     private lateinit var builder: AlertDialog.Builder
 
 
@@ -78,23 +80,37 @@ class Login : AppCompatActivity() {
             val matKhau = edtMatKhau.text.toString().trim()
             if (taiKhoan.isNotBlank() && matKhau.isNotBlank()) {
                 GlobalScope.launch {
-                    val checkLogin = userDao.isLoginValid(taiKhoan, matKhau)
-                    if (checkLogin == true) {
+//                    val checkLogin = userDao.isLoginValid(taiKhoan, matKhau)
+                    val user = userDao.login(taiKhoan, matKhau)
+                    if (user != null) {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@Login, "Đăng nhập thành công", Toast.LENGTH_SHORT)
                                 .show()
-                            val intent = Intent(this@Login, MainActivity::class.java)
-                            startActivity(intent)
+                            val data = User_SharedPreferences(this@Login)
+                            data.saveLogin(user)
+                            if (user.role == "admin") {
+                                val intent = Intent(this@Login, MainActivity::class.java)
+                                startActivity(intent)
+                            } else if (user.role == "user") {
+                                val intent = Intent(this@Login, main_user::class.java)
+                                startActivity(intent)
+                            }
+
                         }
                     } else {
-                        withContext(Dispatchers.Main){
-                            Toast.makeText(this@Login, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@Login,
+                                "Sai tài khoản hoặc mật khẩu",
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                         }
                     }
                 }
             } else {
-                Toast.makeText(this, "Hãy nhập tài khoản và mật khẩu", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Hãy nhập tài khoản và mật khẩu", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         btnTroLai.setOnClickListener {

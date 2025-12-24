@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoAnLTDD">
         <activity
+            android:name=".main_user"
+            android:exported="false" />
+        <activity
             android:name=".TheoDoiCalo"
             android:exported="false">
             <intent-filter>
