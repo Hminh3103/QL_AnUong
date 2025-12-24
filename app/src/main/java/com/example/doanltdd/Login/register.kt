@@ -50,44 +50,67 @@ class register : AppCompatActivity() {
     fun setEvent() {
         val db = AppDatabase.getDatabase(this)
         val userDao = db.userDao()
+
         btnDangKy.setOnClickListener {
+            val tk = edtTaiKhoan.text.toString().trim()
+            val mk = edtMatKhau.text.toString().trim()
             val e = edtEmail.text.toString().trim()
             if (edtTaiKhoan.text.length == 6) {
+
                 if (edtMatKhau.text.length >= 8 && edtMatKhau.text.length <= 12) {
                     if (e.contains("@gmail.com", ignoreCase = false)) {
+
                         GlobalScope.launch {
-                            val user = User(
-                                username = edtTaiKhoan.text.toString(),
-                                password = edtMatKhau.text.toString(),
-                                email = edtEmail.text.toString(),
-                                role = "user"
-                            )
-                            userDao.insertUser(user)
-                            withContext(Dispatchers.Main){
-                                Toast.makeText(this@register, "Tạo tài khoản thành công", Toast.LENGTH_LONG).show()
+                            val user1 = userDao.login(tk, mk)
+                            if (user1 == null) {
+                                val user2 = User(
+                                    username = edtTaiKhoan.text.toString(),
+                                    password = edtMatKhau.text.toString(),
+                                    email = edtEmail.text.toString(),
+                                    role = "user"
+                                )
+                                userDao.insertUser(user2)
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@register,
+                                        "Tạo tài khoản thành công",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@register,
+                                        "Tài khoản đã tồn tại",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
                             }
                         }
 
-                    } else {
+
+                    } else
                         Toast.makeText(this, "Email không hợp lệ", Toast.LENGTH_LONG).show()
-                    }
-                } else {
-                    Toast.makeText(this, "Mật khẩu từ 8 đến 12 kí tự", Toast.LENGTH_LONG).show()
-                }
-            } else {
+
+                } else
+                    Toast.makeText(this, "Mật khẩu từ 8 đến 12 kí tự", Toast.LENGTH_LONG)
+                        .show()
+
+            } else
                 Toast.makeText(this, "Tài khoản gồm 6 kí tự", Toast.LENGTH_LONG).show()
+
+
+            btnTroLai.setOnClickListener {
+                val intent = Intent(this, Login::class.java)
+                startActivity(intent)
+
+            }
+            tvDangNhap.setOnClickListener {
+                val intent = Intent(this, Login::class.java)
+                startActivity(intent)
             }
         }
-        btnTroLai.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
 
-        }
-        tvDangNhap.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
-        }
+
     }
-
-
 }

@@ -31,7 +31,7 @@ class main_user : AppCompatActivity() {
     private fun setControl() {
         btnListBuaAn = findViewById(R.id.btnListBuaAn)
         btnQuanLiThoiQuen = findViewById(R.id.btnQuanLiThoiQuen)
-        btnCalo = findViewById(R.id.btnCalo)
+       // btnCalo = findViewById(R.id.btnCalo)
         btnDangXuat = findViewById(R.id.btnDangXuat)
         tvRole = findViewById(R.id.tvRole)
         //  tvRole1=findViewById(R.id.textView16)
@@ -49,10 +49,10 @@ class main_user : AppCompatActivity() {
             val intent = Intent(this, Main_GiuaKy::class.java)
             startActivity(intent)
         }
-        btnCalo.setOnClickListener {
-            val intent = Intent(this, TheoDoiCalo::class.java)
-            startActivity(intent)
-        }
+//        btnCalo.setOnClickListener {
+//            val intent = Intent(this, TheoDoiCalo::class.java)
+//            startActivity(intent)
+//        }
         btnDangXuat.setOnClickListener {
             data.logout()
             val intent = Intent(this, Login::class.java)

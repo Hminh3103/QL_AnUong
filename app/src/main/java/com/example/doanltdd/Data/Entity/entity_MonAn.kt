@@ -12,4 +12,5 @@ data class Monan (
     val tenmonan: String,
     val buaan: String,
     val socalo: Int
+
 )
