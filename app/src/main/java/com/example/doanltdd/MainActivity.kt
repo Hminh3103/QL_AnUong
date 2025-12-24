@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setEvent() {
         val data = User_SharedPreferences(this@MainActivity)
+        val id = data.getUserId()
         tvRole.setText(data.getRole())
         // tvRole1.setText(data.getUserId().toString())
         btnListBuaAn.setOnClickListener {
