@@ -61,7 +61,7 @@ class register : AppCompatActivity() {
                     if (e.contains("@gmail.com", ignoreCase = false)) {
 
                         GlobalScope.launch {
-                            val user1 = userDao.login(tk, mk)
+                            val user1 = userDao.checkTaiKhoan(tk)
                             if (user1 == null) {
                                 val user2 = User(
                                     username = edtTaiKhoan.text.toString(),

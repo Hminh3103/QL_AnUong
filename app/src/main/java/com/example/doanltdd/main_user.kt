@@ -15,6 +15,8 @@ class main_user : AppCompatActivity() {
     private lateinit var btnQuanLiThoiQuen: Button
     private lateinit var btnCalo: Button
     private lateinit var btnDangXuat: Button
+    private lateinit var btnTheoDoiCalo: Button
+    private lateinit var btnThemCalo: Button
     private lateinit var tvRole: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,8 @@ class main_user : AppCompatActivity() {
     private fun setControl() {
         btnListBuaAn = findViewById(R.id.btnListBuaAn)
         btnQuanLiThoiQuen = findViewById(R.id.btnQuanLiThoiQuen)
+        btnTheoDoiCalo = findViewById(R.id.btnTheoDoiCalo)
+        btnThemCalo = findViewById(R.id.btnThemCalo)
        // btnCalo = findViewById(R.id.btnCalo)
         btnDangXuat = findViewById(R.id.btnDangXuat)
         tvRole = findViewById(R.id.tvRole)
@@ -53,6 +57,14 @@ class main_user : AppCompatActivity() {
 //            val intent = Intent(this, TheoDoiCalo::class.java)
 //            startActivity(intent)
 //        }
+        btnTheoDoiCalo.setOnClickListener {
+            val intent = Intent(this, TheoDoiCalo::class.java)
+            startActivity(intent)
+        }
+        btnThemCalo.setOnClickListener {
+            val intent = Intent(this, Main_GiuaKy::class.java)
+            startActivity(intent)
+        }
         btnDangXuat.setOnClickListener {
             data.logout()
             val intent = Intent(this, Login::class.java)

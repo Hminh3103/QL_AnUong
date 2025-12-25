@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.doanltdd.Data.Database.db_MonAnGoiY
 import com.example.doanltdd.Data.Dao.dao_MonAnGoiY
 import com.example.doanltdd.Data.Entity.Monan
@@ -34,6 +35,11 @@ class mon_an_goi_y : AppCompatActivity() {
     private lateinit var db: db_MonAnGoiY
     private lateinit var dao_MonAnGoiY: dao_MonAnGoiY
 
+    private lateinit var lvMonAn: ListView
+    private val dsMonAn = mutableListOf<entity_MonAnGoiY>()
+    private lateinit var adapter: ArrayAdapter<String>
+    private var selectedPosition = -1
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +54,8 @@ class mon_an_goi_y : AppCompatActivity() {
         setEvent()
         setSPBuaAn()
         setSPLoaiMonAn()
+        setupListView()
+        loadDataFromDatabase()
     }
 
     fun setControl() {
@@ -67,10 +75,15 @@ class mon_an_goi_y : AppCompatActivity() {
         val dao_MonAnGoiY = db.daoMonAnGoiY()
         btnThem.setOnClickListener {
             val ten = edtTen.text.toString().trim()
-            val calo = edtCalo.text.toString().trim().toIntOrNull()?:0
+            val calo = edtCalo.text.toString().trim().toIntOrNull() ?: 0
             val buaAn = spBuaAn.selectedItem.toString()
             val loai = spLoaiMonAn.selectedItem.toString()
-            val monAn =entity_MonAnGoiY(tenMonAnGoiY = ten, buaAn = buaAn, loaiMonAn = loai, calories = calo)
+            val monAn = entity_MonAnGoiY(
+                tenMonAnGoiY = ten,
+                buaAn = buaAn,
+                loaiMonAn = loai,
+                calories = calo
+            )
             GlobalScope.launch(Dispatchers.IO) {
                 dao_MonAnGoiY.insert(monAn)
             }
@@ -103,5 +116,45 @@ class mon_an_goi_y : AppCompatActivity() {
         spLoaiMonAn.adapter = adapter
     }
 
+    private fun setupListView() {
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_activated_1, mutableListOf())
+        lvMonAn.adapter = adapter
+        lvMonAn.choiceMode = ListView.CHOICE_MODE_SINGLE
+
+        lvMonAn.setOnItemClickListener { _, _, position, _ ->
+            selectedPosition = position
+            val meal = dsMonAn[position]
+
+            edtTen.setText(meal.tenMonAnGoiY)
+            edtCalo.setText(meal.calories.toString())
+
+            val spinnerAdapter = spBuaAn.adapter
+            for (i in 0 until spinnerAdapter.count) {
+                if (spinnerAdapter.getItem(i).toString() == meal.buaAn) {
+                    spBuaAn.setSelection(i)
+                    break
+                }
+            }
+        }
+    }
+
+    private fun loadDataFromDatabase() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val list = dao_MonAnGoiY.dsMonAnGoiY()
+            withContext(Dispatchers.Main) {
+                dsMonAn.clear()
+                dsMonAn.addAll(list)
+                refreshListView()
+            }
+        }
+    }
+
+    private fun refreshListView() {
+        adapter.clear()
+        dsMonAn.forEach { meal ->
+            adapter.add("${meal.tenMonAnGoiY} (${meal.buaAn}) - ${meal.loaiMonAn}-${meal.calories} kcal")
+        }
+        adapter.notifyDataSetChanged()
+    }
 
 }
